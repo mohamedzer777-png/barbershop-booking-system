@@ -7,6 +7,7 @@ import com.barbershop.control.SettingsService;
 import com.barbershop.control.SettingsService.SettingsView;
 import com.barbershop.exception.SlotTakenException;
 import com.barbershop.exception.SlotUnavailableException;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -43,9 +44,9 @@ public class AdminController {
     // ---------- התחברות ----------
 
     @PostMapping("/login")
-    public Map<String, Object> login(@RequestBody LoginRequest req, HttpSession session) {
+    public Map<String, Object> login(@RequestBody LoginRequest req, HttpServletRequest request, HttpSession session) {
         if (adminService.checkLogin(req.username(), req.password())) {
-            session.changeSessionId();
+            request.changeSessionId();
             session.setAttribute(SESSION_KEY, req.username());
             String csrf = java.util.UUID.randomUUID().toString();
             session.setAttribute(CSRF_KEY, csrf);
