@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master Barber Shop · קביעת תור</title>
+
+    <link rel="icon" href="/icon-192.png" type="image/png">
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#0d0b09">
+    <link rel="apple-touch-icon" href="/icon-192.png">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Master Barber Shop">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700;900&family=Assistant:wght@400;500;600;700&family=Cinzel:wght@500;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --black:#0d0b09; --black-2:#15110d; --panel:#1a1611; --panel-2:#221c15;
+            --gold:#d4af6a; --gold-br:#f0d79b; --gold-deep:#9c7a36;
+            --cream:#efe7d6; --muted:#9b8e78;
+            --line:rgba(212,175,106,.22); --line-soft:rgba(212,175,106,.12);
+            --red:#d98a86; --green:#93c08f;
+        }
+        * { box-sizing: border-box; }
+        html, body { margin: 0; padding: 0; }
+        body { background: var(--black); color: var(--cream); font-family: 'Assistant', sans-serif; font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+        body::before { content:""; position:fixed; inset:0; z-index:0; pointer-events:none; opacity:.05;
+            background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+        body::after { content:""; position:fixed; inset:0; z-index:0; pointer-events:none; opacity:.5;
+            background:
+                linear-gradient(125deg, transparent 0 39%, var(--line-soft) 39.3% 39.6%, transparent 40%),
+                linear-gradient(60deg, transparent 0 64%, var(--line-soft) 64.3% 64.6%, transparent 65%),
+                radial-gradient(80% 50% at 50% 0%, rgba(212,175,106,.10), transparent 60%); }
+        .wrap { position: relative; z-index: 1; }
+
+        header.hero { position:relative; text-align:center; padding:56px 20px 60px; overflow:hidden;
+            background: radial-gradient(110% 80% at 50% -5%, rgba(212,175,106,.20), transparent 55%), linear-gradient(180deg, #100d0a, var(--black)); }
+        header.hero::after { content:""; position:absolute; left:0; right:0; bottom:0; height:1px; background:linear-gradient(90deg, transparent, var(--gold), transparent); }
+        .emblem-ring { width:110px; height:110px; margin:0 auto 20px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+            background:radial-gradient(circle, rgba(212,175,106,.12), transparent 70%); box-shadow:0 0 0 1px var(--line), 0 0 40px -8px rgba(212,175,106,.45);
+            opacity:0; animation:fadeUp .8s ease .05s forwards; }
+        .emblem-ring svg { width:72px; height:72px; }
+        .hero .kicker { font-family:'Cinzel',serif; font-size:.72rem; letter-spacing:.4em; text-transform:uppercase; color:var(--gold); margin:0 0 12px; padding-inline-start:.4em; opacity:0; animation:fadeUp .8s ease 0s forwards; }
+        .hero h1 { font-family:'Cinzel',serif; font-weight:700; font-size:clamp(1.7rem,6.5vw,2.5rem); margin:0; letter-spacing:.04em;
+            background:linear-gradient(180deg, var(--gold-br), var(--gold) 55%, var(--gold-deep)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+            opacity:0; animation:fadeUp .8s ease .15s forwards; }
+        .hero .sub-he { font-family:'Frank Ruhl Libre',serif; font-weight:500; color:var(--cream); font-size:1.15rem; margin:10px 0 0; opacity:0; animation:fadeUp .8s ease .22s forwards; }
+        .hero .tagline { margin:14px auto 0; max-width:430px; color:#c7baa3; font-size:.98rem; opacity:0; animation:fadeUp .8s ease .3s forwards; }
+        .divider { display:flex; align-items:center; justify-content:center; gap:14px; margin:22px auto 0; max-width:230px; opacity:0; animation:fadeUp .8s ease .4s forwards; }
+        .divider .ln { height:1px; flex:1; background:linear-gradient(90deg, transparent, var(--gold)); }
+        .divider .ln:last-child { background:linear-gradient(90deg, var(--gold), transparent); }
+        .divider .dot { width:7px; height:7px; transform:rotate(45deg); border:1px solid var(--gold); }
+
+        main { max-width:600px; margin:0 auto; padding:0 18px 50px; }
+        .card { position:relative; background:linear-gradient(180deg, var(--panel-2), var(--panel)); border:1px solid var(--line); border-radius:16px; padding:30px 26px 32px; margin-top:26px;
+            box-shadow:0 24px 60px -30px rgba(0,0,0,.9), inset 0 1px 0 rgba(255,255,255,.03); opacity:0; animation:fadeUp .7s ease forwards; }
+        .card.first { margin-top:-30px; }
+        .card:nth-of-type(1){ animation-delay:.42s; } .card:nth-of-type(2){ animation-delay:.52s; }
+        .card::before { content:""; position:absolute; top:0; left:26px; right:26px; height:2px; background:linear-gradient(90deg, transparent, var(--gold-deep), var(--gold-br), var(--gold-deep), transparent); }
+        .eyebrow { font-family:'Cinzel',serif; font-size:.68rem; letter-spacing:.3em; text-transform:uppercase; color:var(--gold); margin-bottom:7px; }
+        .card-title { font-family:'Frank Ruhl Libre',serif; font-weight:700; font-size:1.5rem; margin:0 0 20px; color:var(--cream); }
+        .card-title.sm { font-size:1.32rem; }
+        .fld-label, .field label { display:block; font-weight:600; font-size:.9rem; margin-bottom:7px; color:var(--cream); }
+        .field { margin-bottom:16px; text-align:start; }
+        .inp { width:100%; font-family:'Assistant',sans-serif; font-size:1rem; color:var(--cream); background:#110d0a; border:1px solid var(--line); border-radius:10px; padding:13px 14px; transition:border-color .18s, box-shadow .18s; outline:none; }
+        .inp::placeholder { color:#6f6555; }
+        .inp:focus { border-color:var(--gold); box-shadow:0 0 0 3px rgba(212,175,106,.16); }
+        .inp[type="date"]::-webkit-calendar-picker-indicator { filter:invert(.8) sepia(1) saturate(3) hue-rotate(5deg); cursor:pointer; }
+
+        .slots { display:flex; flex-wrap:wrap; gap:10px; margin-top:22px; }
+        .slot { font-family:'Frank Ruhl Libre',serif; font-weight:500; font-size:1.05rem; width:calc(25% - 7.5px); padding:12px 0; background:#110d0a; color:var(--cream); border:1px solid var(--line); border-radius:10px; cursor:pointer; transition:transform .16s, border-color .16s, background .16s, color .16s, box-shadow .16s; opacity:0; animation:rise .4s ease forwards; }
+        .slot:hover { transform:translateY(-2px); border-color:var(--gold); box-shadow:0 8px 20px -10px rgba(212,175,106,.5); }
+        .slot.selected { background:linear-gradient(180deg, var(--gold-br), var(--gold-deep)); border-color:var(--gold-br); color:#1a1206; font-weight:700; box-shadow:0 10px 24px -10px rgba(212,175,106,.75); }
+        @keyframes rise { to { opacity:1; transform:translateY(0); } }
+        .state-msg { text-align:center; color:var(--muted); padding:22px 8px; font-size:.98rem; }
+
+        .booking-panel { display:none; margin-top:26px; padding-top:24px; border-top:1px solid var(--line-soft); }
+        .booking-panel.show { display:block; animation:fadeUp .4s ease; }
+        .panel-head { font-family:'Frank Ruhl Libre',serif; font-size:1.18rem; font-weight:700; margin-bottom:18px; color:var(--cream); }
+        .panel-head b { color:var(--gold-br); }
+
+        .btn { width:100%; cursor:pointer; border:none; font-family:'Assistant',sans-serif; font-weight:700; font-size:1.02rem; padding:14px; border-radius:11px; letter-spacing:.02em; transition:transform .15s, box-shadow .15s, filter .15s, opacity .15s; }
+        .btn:disabled { opacity:.5; cursor:default; }
+        .btn-gold { background:linear-gradient(180deg, var(--gold-br), var(--gold) 55%, var(--gold-deep)); color:#1a1206; box-shadow:0 14px 30px -12px rgba(212,175,106,.7); }
+        .btn-gold:hover:not(:disabled) { transform:translateY(-1px); filter:brightness(1.05); }
+        .btn-outline { background:transparent; color:var(--gold-br); border:1px solid var(--gold); }
+        .btn-outline:hover:not(:disabled) { background:rgba(212,175,106,.1); transform:translateY(-1px); }
+
+        .result { text-align:center; margin-top:18px; font-weight:600; min-height:22px; }
+        .result.ok { color:var(--green); } .result.err { color:var(--red); }
+
+        .notif-list { margin-top:18px; display:flex; flex-direction:column; gap:11px; }
+        .notif-row { display:flex; align-items:center; justify-content:space-between; gap:12px; background:linear-gradient(180deg, rgba(212,175,106,.12), rgba(212,175,106,.05)); border:1px solid var(--line); border-inline-start:3px solid var(--gold); border-radius:11px; padding:13px 15px; }
+        .notif-row .msg { font-size:.95rem; line-height:1.45; color:var(--cream); }
+        .notif-dismiss { background:none; border:none; color:var(--muted); font-size:1.5rem; line-height:1; cursor:pointer; padding:0 4px; flex-shrink:0; }
+        .notif-dismiss:hover { color:var(--gold-br); }
+
+        .my-list { margin-top:18px; display:flex; flex-direction:column; gap:11px; }
+        .appt-row { display:flex; align-items:center; justify-content:space-between; background:#15110c; border:1px solid var(--line); border-radius:11px; padding:14px 16px; }
+        .appt-when { font-weight:600; color:var(--cream); }
+        .appt-when .t { font-family:'Frank Ruhl Libre',serif; color:var(--gold-br); font-weight:700; }
+        .cancel-btn { background:transparent; color:var(--red); border:1px solid var(--red); border-radius:9px; padding:7px 15px; font-weight:600; cursor:pointer; font-family:'Assistant',sans-serif; transition:background .14s, color .14s; }
+        .cancel-btn:hover { background:var(--red); color:#1a0e0d; }
+
+        footer { text-align:center; padding:34px 20px 44px; color:var(--muted); }
+        footer .fdiv { width:60px; height:1px; margin:0 auto 16px; background:linear-gradient(90deg, transparent, var(--gold), transparent); }
+        footer .name { font-family:'Cinzel',serif; color:var(--gold); font-size:1rem; letter-spacing:.12em; }
+        footer .small { font-size:.8rem; margin-top:6px; color:var(--muted); }
+        @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+        @media (max-width:480px) { .slot { width:calc(33.333% - 7px); } .card { padding:26px 20px 28px; } }
+    </style>
+</head>
+<body>
+<div class="wrap">
+
+    <header class="hero">
+        <div class="emblem-ring">
+            <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g stroke="#f0d79b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="36" cy="64" r="8.5"/><circle cx="64" cy="64" r="8.5"/>
+                    <path d="M41 58 L72 33"/><path d="M59 58 L28 33"/>
+                </g>
+                <circle cx="50" cy="50" r="2.4" fill="#f0d79b"/>
+            </svg>
+        </div>
+        <p class="kicker">The Gentleman's Code</p>
+        <h1>Master Barber Shop</h1>
+        <p class="sub-he">מספרת דני</p>
+        <p class="tagline">חוויית תספורת מוקפדת. בחרו יום ושעה, והשאר עלינו.</p>
+        <div class="divider"><span class="ln"></span><span class="dot"></span><span class="ln"></span></div>
+    </header>
+
+    <main>
+
+        <!-- כרטיס 1: קביעת תור -->
+        <section class="card first">
+            <div class="eyebrow">Reservation</div>
+            <h2 class="card-title">קביעת תור</h2>
+
+            <label for="date" class="fld-label">תאריך</label>
+            <input type="date" id="date" class="inp">
+
+            <div id="slots" class="slots"></div>
+            <div id="state" class="state-msg"></div>
+
+            <div id="bookingPanel" class="booking-panel">
+                <div class="panel-head">פרטים לשעה <b id="chosenTime"></b></div>
+                <div class="field"><label for="firstName">שם פרטי</label><input type="text" id="firstName" class="inp"></div>
+                <div class="field"><label for="lastName">שם משפחה</label><input type="text" id="lastName" class="inp"></div>
+                <div class="field"><label for="phone">מספר טלפון</label><input type="tel" id="phone" class="inp" placeholder="05X-XXXXXXX"></div>
+                <div class="field"><label for="bookingCode">קוד אימות (6 ספרות)</label><input type="text" id="bookingCode" class="inp" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="קוד שקיבלתם ב-SMS"></div>
+                <button id="sendBookingCodeBtn" class="btn btn-outline" type="button">שליחת קוד אימות</button>
+                <button id="confirmBtn" class="btn btn-gold">אישור וקביעת תור</button>
+                <div id="bookingCodeState" class="result" role="status" aria-live="polite"></div>
+            </div>
+
+            <div id="result" class="result"></div>
+        </section>
+
+        <!-- כרטיס 2: האזור האישי -->
+        <section class="card">
+            <div class="eyebrow">My Account</div>
+            <h2 class="card-title sm">התורים שלי</h2>
+            <div class="field"><label for="myPhone">מספר הטלפון שלך</label><input type="tel" id="myPhone" class="inp" placeholder="05X-XXXXXXX"></div>
+            <div class="field"><label for="myCode">קוד אימות (6 ספרות)</label><input type="text" id="myCode" class="inp" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="קוד שקיבלתם ב-SMS"></div>
+            <button id="sendMineCodeBtn" class="btn btn-outline" type="button">שליחת קוד אימות</button>
+            <button id="showMineBtn" class="btn btn-outline">הצגת התורים שלי</button>
+
+            <div id="notifList" class="notif-list"></div>
+            <div id="myList" class="my-list"></div>
+            <div id="myState" class="result"></div>
+        </section>
+
+    </main>
+
+    <footer>
+        <div class="fdiv"></div>
+        <div class="name">MASTER BARBER SHOP</div>
+        <div class="small">מספרת דני · מאז שהמקצוע היה אומנות</div>
+    </footer>
+
+</div>
+
+    <script>
+        const $ = id => document.getElementById(id);
+        function today(){ const d=new Date(); const o=d.getTimezoneOffset()*60000; return new Date(d-o).toISOString().slice(0,10); }
+
+        // ====== קביעת תור ======
+        const dateInput=$('date'), slotsBox=$('slots'), stateBox=$('state'), bookingPanel=$('bookingPanel'),
+              chosenTime=$('chosenTime'), phoneInput=$('phone'), firstInput=$('firstName'), lastInput=$('lastName'),
+              confirmBtn=$('confirmBtn'), resultBox=$('result'), bookingCodeInput=$('bookingCode'),
+              sendBookingCodeBtn=$('sendBookingCodeBtn'), bookingCodeState=$('bookingCodeState');
+        let selectedTime = null;
+
+        function showResult(t, type) { resultBox.textContent=t; resultBox.className='result'+(type?' '+type:''); }
+
+        async function loadSlots(date) {
+            slotsBox.innerHTML=''; bookingPanel.classList.remove('show'); stateBox.textContent='טוען שעות פנויות…';
+            try {
+                const res = await fetch('/api/availability?date='+date);
+                const data = await res.json();
+                if (!data.slots || !data.slots.length) { stateBox.textContent='אין תורים פנויים ביום זה (ייתכן שהמספרה סגורה).'; return; }
+                stateBox.textContent='';
+                data.slots.forEach((time,i)=>{ const b=document.createElement('button'); b.className='slot'; b.textContent=time; b.style.animationDelay=(i*0.03)+'s'; b.onclick=()=>selectSlot(b,time); slotsBox.appendChild(b); });
+            } catch(e){ stateBox.textContent='לא הצלחתי להתחבר לשרת. ודאו שהאפליקציה רצה, ושנכנסתם דרך http://localhost:8080'; }
+        }
+        function selectSlot(b, time) {
+            selectedTime=time;
+            document.querySelectorAll('.slot').forEach(x=>x.classList.remove('selected'));
+            b.classList.add('selected'); showResult('',''); chosenTime.textContent=time; bookingPanel.classList.add('show');
+        }
+        async function requestCode(phone, button, messageEl) {
+            if (!phone) { messageEl.textContent='יש להזין מספר טלפון קודם.'; return; }
+            button.disabled=true; messageEl.textContent='שולח קוד…';
+            try {
+                const res=await fetch('/api/verify/send',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone})});
+                const data=await res.json().catch(()=>({}));
+                messageEl.textContent=res.ok?'קוד האימות נשלח. במצב הדגמה ניתן לראות אותו בקונסול השרת.':(data.error||'לא ניתן לשלוח קוד.');
+            } catch(e) { messageEl.textContent='לא הצלחתי להתחבר לשרת.'; }
+            finally { button.disabled=false; }
+        }
+        sendBookingCodeBtn.addEventListener('click',()=>requestCode(phoneInput.value.trim(),sendBookingCodeBtn,bookingCodeState));
+        async function confirmBooking() {
+            const phone=phoneInput.value.trim(), firstName=firstInput.value.trim(), lastName=lastInput.value.trim();
+            const code=bookingCodeInput.value.trim();
+            if (!phone||!firstName||!lastName) { showResult('יש למלא טלפון, שם פרטי ושם משפחה.','err'); return; }
+            if (!/^\d{6}$/.test(code)) { showResult('יש לבקש ולהזין קוד אימות בן 6 ספרות.','err'); return; }
+            confirmBtn.disabled=true; showResult('שולח…','');
+            try {
+                const res=await fetch('/api/appointments',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone,firstName,lastName,date:dateInput.value,time:selectedTime,code})});
+                if (res.ok) { showResult('התור נקבע בהצלחה! נתראה ב-'+dateInput.value+' בשעה '+selectedTime+' ✂','ok'); firstInput.value='';lastInput.value='';phoneInput.value='';bookingCodeInput.value='';bookingCodeState.textContent=''; loadSlots(dateInput.value); }
+                else if (res.status===409) { showResult('אופס — השעה הזו בדיוק נתפסה. בחרו שעה אחרת.','err'); loadSlots(dateInput.value); }
+                else { const d=await res.json().catch(()=>({})); showResult(d.error||'משהו השתבש. נסו שוב.','err'); }
+            } catch(e){ showResult('לא הצלחתי להתחבר לשרת. נסו שוב.','err'); }
+            finally { confirmBtn.disabled=false; }
+        }
+        confirmBtn.addEventListener('click', confirmBooking);
+        dateInput.addEventListener('change', ()=>{ showResult('',''); loadSlots(dateInput.value); });
+        dateInput.min=today(); dateInput.value=today(); loadSlots(dateInput.value);
+
+        // ====== האזור האישי ======
+        const myPhoneInput=$('myPhone'), showMineBtn=$('showMineBtn'), myListBox=$('myList'), myStateBox=$('myState'), notifList=$('notifList'), myCodeInput=$('myCode'), sendMineCodeBtn=$('sendMineCodeBtn');
+        let myPhone=null, myCode=null;
+        sendMineCodeBtn.addEventListener('click',()=>requestCode(myPhoneInput.value.trim(),sendMineCodeBtn,myStateBox));
+
+        function showMyState(t,type){ myStateBox.textContent=t; myStateBox.className='result'+(type?' '+type:''); }
+
+        function renderNotifications(list) {
+            notifList.innerHTML='';
+            (list||[]).forEach(n=>{
+                const row=document.createElement('div'); row.className='notif-row';
+                const msg=document.createElement('span'); msg.className='msg'; msg.textContent=n.message;
+                const x=document.createElement('button'); x.className='notif-dismiss'; x.textContent='×'; x.title='סמן כנקרא';
+                x.onclick=()=>dismissNotification(n.id);
+                row.appendChild(msg); row.appendChild(x); notifList.appendChild(row);
+            });
+        }
+
+        async function loadMyAppointments() {
+            const phone=myPhoneInput.value.trim(), code=myCodeInput.value.trim();
+            myListBox.innerHTML=''; notifList.innerHTML=''; myPhone=null; myCode=null;
+            if (!phone || !/^\d{6}$/.test(code)) { notifList.innerHTML=''; showMyState('יש להזין טלפון וקוד אימות בן 6 ספרות.','err'); return; }
+            showMineBtn.disabled=true; showMyState('טוען…','');
+            try {
+                const res=await fetch('/api/appointments/mine',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone,code})});
+                if (!res.ok) { const d=await res.json().catch(()=>({})); showMyState(d.error||'לא ניתן לטעון.','err'); return; }
+                const data=await res.json();           // { appointments:[...], notifications:[...] }
+                myPhone=phone; myCode=code;
+                renderNotifications(data.notifications);
+                if (!data.appointments || !data.appointments.length) { showMyState('אין לך תורים עתידיים.',''); return; }
+                showMyState('','');
+                data.appointments.forEach(a=>{
+                    const row=document.createElement('div'); row.className='appt-row';
+                    const when=document.createElement('span'); when.className='appt-when';
+                    const t=document.createElement('span'); t.className='t'; t.textContent=a.time;
+                    when.append(a.date+'  ·  בשעה  ', t);
+                    const btn=document.createElement('button'); btn.className='cancel-btn'; btn.textContent='ביטול'; btn.onclick=()=>cancelAppointment(a.id);
+                    row.appendChild(when); row.appendChild(btn); myListBox.appendChild(row);
+                });
+            } catch(e){ showMyState('לא הצלחתי להתחבר לשרת.','err'); }
+            finally { showMineBtn.disabled=false; }
+        }
+
+        async function cancelAppointment(id) {
+            if (!confirm('לבטל את התור?')) return;
+            try {
+                const res=await fetch('/api/appointments/'+id+'/cancel',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone:myPhone,code:myCode})});
+                if (res.ok) { loadMyAppointments(); }
+                else { const d=await res.json().catch(()=>({})); showMyState(d.error||'הביטול נכשל.','err'); }
+            } catch(e){ showMyState('לא הצלחתי להתחבר לשרת.','err'); }
+        }
+
+        async function dismissNotification(id) {
+            try { await fetch('/api/notifications/'+id+'/read',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone:myPhone,code:myCode})}); loadMyAppointments(); } catch(e){}
+        }
+
+        showMineBtn.addEventListener('click', loadMyAppointments);
+        myPhoneInput.addEventListener('keydown', e=>{ if(e.key==='Enter') loadMyAppointments(); });
+
+        myPhoneInput.addEventListener('input',()=>{ myPhone=null; myCode=null; myListBox.innerHTML=''; notifList.innerHTML=''; });
+
+        // PWA
+        if ('serviceWorker' in navigator) { window.addEventListener('load', ()=>navigator.serviceWorker.register('/service-worker.js').catch(()=>{})); }
+    </script>
+</body>
+</html>

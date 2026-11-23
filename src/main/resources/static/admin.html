@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master Barber Shop · ניהול</title>
+    <link rel="icon" href="/icon-192.png" type="image/png">
+    <meta name="theme-color" content="#0d0b09">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@500;700&family=Assistant:wght@400;500;600;700&family=Cinzel:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --black:#0d0b09; --panel:#1a1611; --panel-2:#221c15; --gold:#d4af6a; --gold-br:#f0d79b; --gold-deep:#9c7a36;
+            --cream:#efe7d6; --muted:#9b8e78; --line:rgba(212,175,106,.22); --line-soft:rgba(212,175,106,.12); --red:#d98a86; --green:#93c08f; }
+        * { box-sizing:border-box; } html,body { margin:0; padding:0; }
+        body { background:var(--black); color:var(--cream); font-family:'Assistant',sans-serif; font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased; }
+        body::before { content:""; position:fixed; inset:0; z-index:0; pointer-events:none; opacity:.05;
+            background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+        .wrap { position:relative; z-index:1; }
+        header.hero { position:relative; text-align:center; padding:40px 20px 34px;
+            background:radial-gradient(110% 80% at 50% -5%, rgba(212,175,106,.18), transparent 55%), linear-gradient(180deg,#100d0a,var(--black)); }
+        header.hero::after { content:""; position:absolute; left:0; right:0; bottom:0; height:1px; background:linear-gradient(90deg,transparent,var(--gold),transparent); }
+        .hero .kicker { font-family:'Cinzel',serif; font-size:.66rem; letter-spacing:.34em; text-transform:uppercase; color:var(--gold); margin:0 0 8px; }
+        .hero h1 { font-family:'Cinzel',serif; font-weight:700; font-size:1.7rem; margin:0; letter-spacing:.04em;
+            background:linear-gradient(180deg,var(--gold-br),var(--gold) 55%,var(--gold-deep)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+        .hero .sub-he { font-family:'Frank Ruhl Libre',serif; color:var(--cream); font-size:.98rem; margin:8px 0 0; }
+        main { max-width:640px; margin:0 auto; padding:0 18px 50px; }
+        .card { position:relative; background:linear-gradient(180deg,var(--panel-2),var(--panel)); border:1px solid var(--line); border-radius:16px; padding:28px 24px 30px; margin-top:24px;
+            box-shadow:0 24px 60px -30px rgba(0,0,0,.9); }
+        .card.first { margin-top:-22px; }
+        .card::before { content:""; position:absolute; top:0; left:24px; right:24px; height:2px; background:linear-gradient(90deg,transparent,var(--gold-deep),var(--gold-br),var(--gold-deep),transparent); }
+        .eyebrow { font-family:'Cinzel',serif; font-size:.64rem; letter-spacing:.28em; text-transform:uppercase; color:var(--gold); margin-bottom:6px; }
+        .sec-title { font-family:'Frank Ruhl Libre',serif; font-weight:700; font-size:1.3rem; margin:0 0 18px; color:var(--cream); }
+        .field { margin-bottom:14px; text-align:start; } .field label { display:block; font-weight:600; font-size:.9rem; margin-bottom:6px; color:var(--cream); }
+        .inp { width:100%; font-family:'Assistant',sans-serif; font-size:1rem; color:var(--cream); background:#110d0a; border:1px solid var(--line); border-radius:10px; padding:12px 13px; outline:none; transition:border-color .18s, box-shadow .18s; }
+        .inp::placeholder { color:#6f6555; } .inp:focus { border-color:var(--gold); box-shadow:0 0 0 3px rgba(212,175,106,.16); }
+        .inp[type="date"]::-webkit-calendar-picker-indicator, .inp[type="time"]::-webkit-calendar-picker-indicator { filter:invert(.8) sepia(1) saturate(3) hue-rotate(5deg); cursor:pointer; }
+        .btn { width:100%; cursor:pointer; border:none; font-family:'Assistant',sans-serif; font-weight:700; font-size:1.02rem; padding:13px; border-radius:11px; transition:transform .15s, filter .15s, opacity .15s; }
+        .btn:disabled { opacity:.5; cursor:default; }
+        .btn-gold { background:linear-gradient(180deg,var(--gold-br),var(--gold) 55%,var(--gold-deep)); color:#1a1206; box-shadow:0 12px 26px -12px rgba(212,175,106,.7); }
+        .btn-gold:hover:not(:disabled) { transform:translateY(-1px); filter:brightness(1.05); }
+        .btn-outline { background:transparent; color:var(--gold-br); border:1px solid var(--gold); }
+        .btn-outline:hover:not(:disabled) { background:rgba(212,175,106,.1); }
+        .result { text-align:center; margin-top:12px; font-weight:600; min-height:20px; color:var(--red); }
+        .dashboard { display:none; } .dashboard.show { display:block; }
+        .dash-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
+        .welcome { font-family:'Frank Ruhl Libre',serif; font-size:1.15rem; } .welcome b { color:var(--gold-br); }
+        .btn-logout { background:transparent; color:var(--cream); border:1px solid var(--line); border-radius:9px; padding:8px 15px; font-weight:500; cursor:pointer; font-family:'Assistant',sans-serif; font-size:.88rem; white-space:nowrap; }
+        .btn-logout:hover { border-color:var(--gold); color:var(--gold-br); }
+        .block-title { font-family:'Frank Ruhl Libre',serif; font-weight:700; font-size:1.1rem; margin:28px 0 14px; padding-top:22px; border-top:1px solid var(--line-soft); color:var(--gold-br); }
+        .cal-table { width:100%; border-collapse:collapse; }
+        .cal-table th { text-align:start; font-size:.76rem; color:var(--muted); font-weight:700; padding:8px 8px; border-bottom:1px solid var(--line); letter-spacing:.04em; }
+        .cal-table td { padding:11px 8px; border-bottom:1px solid var(--line-soft); vertical-align:middle; }
+        .cal-table td.t { font-family:'Frank Ruhl Libre',serif; font-weight:700; color:var(--gold-br); white-space:nowrap; }
+        .cal-table td.ph { color:var(--muted); direction:ltr; text-align:start; font-size:.88rem; }
+        .cal-msg { text-align:center; color:var(--muted); padding:20px 8px; }
+        .row-actions { display:flex; gap:6px; justify-content:flex-end; }
+        .btn-xs { border-radius:8px; padding:5px 11px; font-size:.84rem; font-weight:600; cursor:pointer; font-family:'Assistant',sans-serif; background:transparent; }
+        .btn-move { color:var(--gold-br); border:1px solid var(--gold); } .btn-move:hover { background:rgba(212,175,106,.12); }
+        .btn-cancel { color:var(--red); border:1px solid var(--red); } .btn-cancel:hover { background:var(--red); color:#1a0e0d; }
+        .panel { display:none; background:#15110c; border:1px solid var(--line); border-radius:12px; padding:16px; margin:14px 0; }
+        .panel.show { display:block; }
+        .panel-h { font-weight:700; margin-bottom:12px; color:var(--gold-br); }
+        .row2 { display:flex; gap:10px; } .row2>* { flex:1; }
+        .panel-btns { display:flex; gap:8px; margin-top:10px; }
+        .add-toggle { text-align:center; margin-top:14px; }
+        .link-btn { background:none; border:none; color:var(--gold-br); font-weight:700; cursor:pointer; font-family:'Assistant',sans-serif; font-size:.95rem; }
+        .mini-msg { font-size:.88rem; margin-top:8px; min-height:16px; color:var(--red); }
+        .block-row { display:flex; align-items:center; justify-content:space-between; background:#15110c; border:1px solid var(--line); border-radius:10px; padding:11px 14px; margin-bottom:9px; }
+        .block-info b { color:var(--gold-br); } .block-info span { color:var(--muted); font-size:.88rem; margin-inline-start:8px; }
+        .radio-row { display:flex; gap:18px; margin-bottom:12px; } .radio-row label { font-weight:500; cursor:pointer; }
+        .hidden { display:none; }
+        input[type="radio"], input[type="checkbox"] { accent-color: var(--gold); }
+        /* שעות פעילות */
+        .day-row { display:flex; align-items:center; gap:8px; padding:9px 0; border-bottom:1px solid var(--line-soft); }
+        .day-name { width:64px; font-weight:600; }
+        .day-row .inp { padding:8px 9px; font-size:.92rem; }
+        .day-open { width:90px; } .day-close { width:90px; }
+        .day-toggle { display:flex; align-items:center; gap:5px; font-size:.85rem; color:var(--muted); white-space:nowrap; }
+        .day-save { background:transparent; color:var(--gold-br); border:1px solid var(--gold); border-radius:8px; padding:7px 10px; font-size:.82rem; font-weight:600; cursor:pointer; font-family:'Assistant',sans-serif; white-space:nowrap; }
+        .day-save:hover { background:rgba(212,175,106,.12); }
+        .slot-row { display:flex; align-items:flex-end; gap:10px; margin-top:16px; }
+        .slot-row .field { flex:1; margin:0; }
+    </style>
+</head>
+<body>
+<div class="wrap">
+    <header class="hero">
+        <p class="kicker">Administration</p>
+        <h1>אזור הניהול</h1>
+        <p class="sub-he">Master Barber Shop · מספרת דני</p>
+    </header>
+
+    <main>
+        <div class="card first">
+            <!-- התחברות -->
+            <div id="loginForm">
+                <div class="eyebrow">Sign In</div>
+                <h2 class="sec-title">כניסת מנהל</h2>
+                <div class="field"><label for="username">שם משתמש</label><input type="text" id="username" class="inp" autocomplete="username"></div>
+                <div class="field"><label for="password">סיסמה</label><input type="password" id="password" class="inp" autocomplete="current-password"></div>
+                <button id="loginBtn" class="btn btn-gold">כניסה</button>
+                <div id="loginMsg" class="result"></div>
+            </div>
+
+            <!-- לוח בקרה -->
+            <div id="dashboard" class="dashboard">
+                <div class="dash-head">
+                    <div class="welcome">שלום, <b id="adminName"></b></div>
+                    <button id="logoutBtn" class="btn-logout">התנתקות</button>
+                </div>
+
+                <div class="field"><label for="calDate">יומן ושיבוצים ליום</label><input type="date" id="calDate" class="inp"></div>
+
+                <div id="movePanel" class="panel">
+                    <div class="panel-h">הזזת התור של <span id="moveName"></span></div>
+                    <div class="row2">
+                        <div><label class="field" style="margin:0">תאריך</label><input type="date" id="moveDate" class="inp"></div>
+                        <div><label class="field" style="margin:0">שעה</label><input type="time" id="moveTime" class="inp" step="1800"></div>
+                    </div>
+                    <div class="panel-btns"><button id="moveConfirm" class="btn btn-gold" style="width:auto;flex:1">אישור הזזה</button><button id="moveCancel" class="btn-logout">ביטול</button></div>
+                    <div id="moveMsg" class="mini-msg"></div>
+                </div>
+
+                <div id="calBody"></div>
+
+                <div class="add-toggle"><button id="addToggle" class="link-btn">+ הוספת תור ידני</button></div>
+                <div id="addPanel" class="panel">
+                    <div class="panel-h">קביעת תור ללקוח (טלפוני)</div>
+                    <div class="field"><label>טלפון</label><input type="tel" id="addPhone" class="inp" placeholder="05X-XXXXXXX"></div>
+                    <div class="row2"><div><label class="field" style="margin:0">שם פרטי</label><input type="text" id="addFirst" class="inp"></div><div><label class="field" style="margin:0">שם משפחה</label><input type="text" id="addLast" class="inp"></div></div>
+                    <div class="field" style="margin-top:10px"><label>שעה</label><input type="time" id="addTime" class="inp" step="1800"></div>
+                    <div class="panel-btns"><button id="addConfirm" class="btn btn-gold" style="width:auto;flex:1">קביעת תור</button><button id="addCancelBtn" class="btn-logout">ביטול</button></div>
+                    <div id="addMsg" class="mini-msg"></div>
+                </div>
+
+                <!-- חסימות -->
+                <div class="block-title">חסימות ליום זה</div>
+                <div id="blocksBody"></div>
+                <div class="panel show" style="margin-top:14px">
+                    <div class="panel-h">הוספת חסימה</div>
+                    <div class="radio-row">
+                        <label><input type="radio" name="blockType" value="day" checked> יום שלם</label>
+                        <label><input type="radio" name="blockType" value="range"> טווח שעות</label>
+                    </div>
+                    <div id="rangeInputs" class="row2 hidden"><div><label class="field" style="margin:0">מ-</label><input type="time" id="blkStart" class="inp" step="1800"></div><div><label class="field" style="margin:0">עד</label><input type="time" id="blkEnd" class="inp" step="1800"></div></div>
+                    <div class="field" style="margin-top:10px"><label>סיבה (לא חובה)</label><input type="text" id="blkReason" class="inp" placeholder="חופשה, פגישה..."></div>
+                    <div class="panel-btns"><button id="blockConfirm" class="btn btn-gold">חסום</button></div>
+                    <div id="blockMsg" class="mini-msg"></div>
+                </div>
+
+                <!-- שעות פעילות -->
+                <div class="block-title">שעות פעילות קבועות</div>
+                <div id="hoursBody"></div>
+                <div class="slot-row">
+                    <div class="field"><label for="slotMin">משך תור (דקות)</label><input type="number" id="slotMin" class="inp" min="5" max="240" step="5"></div>
+                    <button id="slotSave" class="day-save" style="padding:12px 16px">שמירת משך</button>
+                </div>
+                <div id="settingsMsg" class="mini-msg"></div>
+            </div>
+        </div>
+    </main>
+</div>
+
+    <script>
+        const $ = id => document.getElementById(id);
+        function today(){ const d=new Date(); const o=d.getTimezoneOffset()*60000; return new Date(d-o).toISOString().slice(0,10); }
+        function esc(s){ return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+        const loginForm=$('loginForm'), dashboard=$('dashboard'), usernameIn=$('username'), passwordIn=$('password'),
+              loginBtn=$('loginBtn'), loginMsg=$('loginMsg'), adminName=$('adminName'), logoutBtn=$('logoutBtn'),
+              calDate=$('calDate'), calBody=$('calBody'), blocksBody=$('blocksBody'), hoursBody=$('hoursBody');
+        let moveId=null, adminCsrf=null;
+        function adminPost(url, options={}) {
+            return fetch(url,{...options,headers:{...(options.headers||{}),'X-CSRF-Token':adminCsrf||''}});
+        }
+
+        function showDashboard(name){ adminName.textContent=name; loginForm.classList.add('hidden'); dashboard.classList.add('show'); calDate.value=today(); loadDay(); loadSettings(); }
+        function showLogin(){ adminCsrf=null; dashboard.classList.remove('show'); loginForm.classList.remove('hidden'); loginMsg.textContent=''; passwordIn.value=''; }
+        function loadDay(){ $('movePanel').classList.remove('show'); $('addPanel').classList.remove('show'); loadCalendar(); loadBlocks(); }
+
+        async function checkSession(){ try{ const r=await fetch('/api/admin/session'); const d=await r.json(); if(d.loggedIn){ adminCsrf=d.csrfToken; showDashboard(d.username); } else showLogin(); }catch(e){ showLogin(); } }
+        async function doLogin(){
+            const u=usernameIn.value.trim(), p=passwordIn.value;
+            if(!u||!p){ loginMsg.textContent='יש למלא שם משתמש וסיסמה.'; return; }
+            loginBtn.disabled=true; loginMsg.textContent='';
+            try{ const r=await fetch('/api/admin/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,password:p})});
+                if(r.ok){ const d=await r.json(); adminCsrf=d.csrfToken; showDashboard(d.username); } else { const d=await r.json().catch(()=>({})); loginMsg.textContent=d.error||'ההתחברות נכשלה.'; } }
+            catch(e){ loginMsg.textContent='לא הצלחתי להתחבר לשרת.'; } finally{ loginBtn.disabled=false; }
+        }
+        async function doLogout(){ try{ await adminPost('/api/admin/logout',{method:'POST'}); }catch(e){} showLogin(); }
+
+        // יומן
+        async function loadCalendar(){
+            calBody.innerHTML='<div class="cal-msg">טוען…</div>';
+            try{ const r=await fetch('/api/admin/appointments?date='+calDate.value);
+                if(r.status===401){ showLogin(); return; }
+                const data=await r.json();
+                if(!data.length){ calBody.innerHTML='<div class="cal-msg">אין תורים ביום זה.</div>'; return; }
+                let h='<table class="cal-table"><thead><tr><th>שעה</th><th>שם</th><th>טלפון</th><th></th></tr></thead><tbody>';
+                data.forEach(a=>{ h+='<tr><td class="t">'+a.time+'</td><td>'+esc(a.name)+'</td><td class="ph">'+esc(a.phone)+'</td><td><div class="row-actions"><button class="btn-xs btn-move" data-id="'+a.id+'" data-name="'+esc(a.name)+'" data-time="'+a.time+'">הזזה</button><button class="btn-xs btn-cancel" data-id="'+a.id+'" data-name="'+esc(a.name)+'">ביטול</button></div></td></tr>'; });
+                h+='</tbody></table>'; calBody.innerHTML=h;
+                calBody.querySelectorAll('.btn-move').forEach(b=>b.onclick=()=>startMove(b.dataset.id,b.dataset.name,b.dataset.time));
+                calBody.querySelectorAll('.btn-cancel').forEach(b=>b.onclick=()=>cancelAppt(b.dataset.id,b.dataset.name));
+            }catch(e){ calBody.innerHTML='<div class="cal-msg">שגיאת חיבור לשרת.</div>'; }
+        }
+        async function cancelAppt(id,name){ if(!confirm('לבטל את התור של '+name+'?')) return;
+            try{ const r=await adminPost('/api/admin/appointments/'+id+'/cancel',{method:'POST'}); if(r.ok) loadCalendar(); else if(r.status===401) showLogin(); }catch(e){} }
+        function startMove(id,name,time){ moveId=id; $('moveName').textContent=name; $('moveDate').value=calDate.value; $('moveTime').value=time; $('moveMsg').textContent=''; $('movePanel').classList.add('show'); $('movePanel').scrollIntoView({behavior:'smooth',block:'nearest'}); }
+        async function confirmMove(){ const date=$('moveDate').value, time=$('moveTime').value; if(!date||!time){ $('moveMsg').textContent='יש לבחור תאריך ושעה.'; return; }
+            try{ const r=await adminPost('/api/admin/appointments/'+moveId+'/move',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({date,time})});
+                if(r.ok){ $('movePanel').classList.remove('show'); loadCalendar(); } else if(r.status===401) showLogin(); else { const d=await r.json().catch(()=>({})); $('moveMsg').textContent=d.error||'ההזזה נכשלה.'; } }
+            catch(e){ $('moveMsg').textContent='שגיאת חיבור לשרת.'; } }
+        function toggleAdd(){ $('addPanel').classList.toggle('show'); $('addMsg').textContent=''; }
+        async function adminBook(){ const phone=$('addPhone').value.trim(), first=$('addFirst').value.trim(), last=$('addLast').value.trim(), time=$('addTime').value;
+            if(!phone||!first||!last||!time){ $('addMsg').textContent='יש למלא טלפון, שם פרטי, שם משפחה ושעה.'; return; }
+            try{ const r=await adminPost('/api/admin/appointments',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone,firstName:first,lastName:last,date:calDate.value,time})});
+                if(r.ok){ $('addPanel').classList.remove('show'); $('addPhone').value='';$('addFirst').value='';$('addLast').value='';$('addTime').value=''; loadCalendar(); } else if(r.status===401) showLogin(); else { const d=await r.json().catch(()=>({})); $('addMsg').textContent=d.error||'הקביעה נכשלה.'; } }
+            catch(e){ $('addMsg').textContent='שגיאת חיבור לשרת.'; } }
+
+        // חסימות
+        async function loadBlocks(){ blocksBody.innerHTML='';
+            try{ const r=await fetch('/api/admin/blocks?date='+calDate.value); if(r.status===401){ showLogin(); return; }
+                const data=await r.json(); if(!data.length){ blocksBody.innerHTML='<div class="cal-msg" style="padding:12px">אין חסימות ביום זה.</div>'; return; }
+                let h=''; data.forEach(b=>{ h+='<div class="block-row"><div class="block-info"><b>'+esc(b.label)+'</b>'+(b.reason?'<span>'+esc(b.reason)+'</span>':'')+'</div><button class="btn-xs btn-cancel" data-id="'+b.id+'">הסר</button></div>'; });
+                blocksBody.innerHTML=h; blocksBody.querySelectorAll('.btn-cancel').forEach(btn=>btn.onclick=()=>removeBlock(btn.dataset.id)); }
+            catch(e){ blocksBody.innerHTML='<div class="cal-msg" style="padding:12px">שגיאת חיבור.</div>'; } }
+        async function removeBlock(id){ try{ const r=await adminPost('/api/admin/blocks/'+id+'/delete',{method:'POST'}); if(r.ok) loadBlocks(); else if(r.status===401) showLogin(); }catch(e){} }
+        async function addBlock(){ const type=document.querySelector('input[name="blockType"]:checked').value, reason=$('blkReason').value.trim();
+            let start=null,end=null; if(type==='range'){ start=$('blkStart').value; end=$('blkEnd').value; if(!start||!end){ $('blockMsg').textContent='יש לבחור שעת התחלה וסיום.'; return; } }
+            try{ const r=await adminPost('/api/admin/blocks',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({date:calDate.value,start,end,reason})});
+                if(r.ok){ $('blkStart').value='';$('blkEnd').value='';$('blkReason').value='';$('blockMsg').textContent=''; loadBlocks(); } else if(r.status===401) showLogin(); else { const d=await r.json().catch(()=>({})); $('blockMsg').textContent=d.error||'החסימה נכשלה.'; } }
+            catch(e){ $('blockMsg').textContent='שגיאת חיבור.'; } }
+
+        // שעות פעילות
+        async function loadSettings(){
+            try{ const r=await fetch('/api/admin/settings'); if(r.status===401){ showLogin(); return; }
+                const s=await r.json(); $('slotMin').value=s.slotMinutes;
+                let h=''; s.days.forEach(d=>{ h+='<div class="day-row" data-day="'+d.dayOfWeek+'">'+
+                    '<span class="day-name">'+d.dayName+'</span>'+
+                    '<input type="time" class="inp day-open" step="1800" value="'+d.open+'">'+
+                    '<input type="time" class="inp day-close" step="1800" value="'+d.close+'">'+
+                    '<label class="day-toggle"><input type="checkbox" class="day-isopen" '+(d.isOpen?'checked':'')+'> פתוח</label>'+
+                    '<button class="day-save">שמור</button></div>'; });
+                hoursBody.innerHTML=h;
+                hoursBody.querySelectorAll('.day-row').forEach(row=>{ row.querySelector('.day-save').onclick=()=>saveDay(row); });
+            }catch(e){ hoursBody.innerHTML='<div class="cal-msg" style="padding:12px">שגיאת חיבור.</div>'; }
+        }
+        async function saveDay(row){
+            const dayOfWeek=parseInt(row.dataset.day,10);
+            const open=row.querySelector('.day-open').value, close=row.querySelector('.day-close').value, isOpen=row.querySelector('.day-isopen').checked;
+            $('settingsMsg').style.color=''; $('settingsMsg').textContent='שומר…';
+            try{ const r=await adminPost('/api/admin/settings/day',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({dayOfWeek,open,close,isOpen})});
+                if(r.ok){ $('settingsMsg').style.color='var(--green)'; $('settingsMsg').textContent='נשמר ✓'; } else if(r.status===401) showLogin(); else { const d=await r.json().catch(()=>({})); $('settingsMsg').style.color=''; $('settingsMsg').textContent=d.error||'השמירה נכשלה.'; } }
+            catch(e){ $('settingsMsg').textContent='שגיאת חיבור.'; }
+        }
+        async function saveSlot(){
+            const minutes=parseInt($('slotMin').value,10); $('settingsMsg').style.color=''; $('settingsMsg').textContent='שומר…';
+            try{ const r=await adminPost('/api/admin/settings/slot',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({minutes})});
+                if(r.ok){ $('settingsMsg').style.color='var(--green)'; $('settingsMsg').textContent='נשמר ✓'; } else if(r.status===401) showLogin(); else { const d=await r.json().catch(()=>({})); $('settingsMsg').style.color=''; $('settingsMsg').textContent=d.error||'השמירה נכשלה.'; } }
+            catch(e){ $('settingsMsg').textContent='שגיאת חיבור.'; }
+        }
+
+        // חיווט
+        loginBtn.onclick=doLogin; passwordIn.addEventListener('keydown',e=>{ if(e.key==='Enter') doLogin(); });
+        logoutBtn.onclick=doLogout; calDate.addEventListener('change',loadDay);
+        $('moveConfirm').onclick=confirmMove; $('moveCancel').onclick=()=>$('movePanel').classList.remove('show');
+        $('addToggle').onclick=toggleAdd; $('addConfirm').onclick=adminBook; $('addCancelBtn').onclick=()=>$('addPanel').classList.remove('show');
+        $('blockConfirm').onclick=addBlock; $('slotSave').onclick=saveSlot;
+        document.querySelectorAll('input[name="blockType"]').forEach(r=>r.addEventListener('change',()=>{ $('rangeInputs').classList.toggle('hidden', document.querySelector('input[name="blockType"]:checked').value!=='range'); }));
+        checkSession();
+    </script>
+</body>
+</html>
