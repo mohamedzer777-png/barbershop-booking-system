@@ -2,7 +2,7 @@
 
 A portfolio-oriented full-stack appointment booking system for a barbershop. A Hebrew right-to-left PWA frontend communicates with a Java / Spring Boot REST API backed by Microsoft SQL Server.
 
-> **Status:** Local/demo MVP; not independently verified end-to-end with SQL Server. Real SMS delivery and production hardening are not included.
+> **Status:** Local/demo portfolio MVP. Core booking/admin workflows were manually verified against a local SQL Server on 2026-11-23; 15 unit tests passed locally and in CI. **Not production-ready**: real SMS delivery, automated live-database E2E tests and production hardening are not included.
 
 ## Features
 
@@ -29,10 +29,11 @@ Prerequisites: JDK 17+, Maven 3.9+, SQL Server and SQL Server Management Studio 
    ```powershell
    $env:DB_URL = 'jdbc:sqlserver://localhost:1433;databaseName=barbershop;encrypt=true;trustServerCertificate=true'
    $env:DB_USER = 'barber_app'
-   $env:DB_PASSWORD = Read-Host 'SQL Server password'
+   $secureDb = Read-Host 'SQL Server password' -AsSecureString
+   $env:DB_PASSWORD = ([pscredential]::new('barber_app', $secureDb)).GetNetworkCredential().Password
    $env:ADMIN_USERNAME = 'admin'
    $secureAdmin = Read-Host 'Choose admin password (12+ chars)' -AsSecureString
-   $env:ADMIN_PASSWORD = [System.Net.NetworkCredential]::new('', $secureAdmin).Password
+   $env:ADMIN_PASSWORD = ([pscredential]::new('admin', $secureAdmin)).GetNetworkCredential().Password
    $env:DEMO_MODE = 'true'
    $env:JAVA_TOOL_OPTIONS = '-Duser.timezone=Asia/Jerusalem'
    mvn clean test
@@ -56,7 +57,11 @@ The screenshots were captured from the real HTML and JavaScript screens, with sy
 mvn clean verify
 ```
 
-Unit tests cover OTP verification, authorization gates for appointments and notifications, available slots, and admin CSRF enforcement. GitHub Actions runs the test/package workflow on pushes and PRs. **Integration tests against live SQL Server and real backend/browser E2E tests are still pending.** A browser-level UI smoke check with mocked API responses is available as `scripts/browser_mock_smoke.py` (requires Playwright Python and Chromium).
+**15 JUnit tests passed** (0 failures) locally and on GitHub Actions. Unit tests cover OTP verification, authorization gates for appointments and notifications, available slots, and admin CSRF enforcement. GitHub Actions runs the test/package workflow on pushes and PRs.
+
+**Manual local SQL Server acceptance checks completed on 2026-11-23:** customer booking and cancellation, admin login, time blocking/unblocking, appointment rescheduling, in-app notifications, admin cancellation, and duplicate-slot rejection. See [Verification and acceptance evidence](docs/VERIFICATION.md) for details and limitations. Automated live-database integration tests and real browser-to-backend E2E tests remain pending.
+
+A browser-level UI smoke check with mocked API responses is also available as `scripts/browser_mock_smoke.py` (requires Playwright Python and Chromium).
 
 ## Repository tour
 
@@ -68,6 +73,7 @@ Unit tests cover OTP verification, authorization gates for appointments and noti
 - `schema.sql` — SQL Server schema and compatible OTP migration
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — architecture and main workflows
 - [`docs/SECURITY.md`](docs/SECURITY.md) — security constraints and production gaps
+- [`docs/VERIFICATION.md`](docs/VERIFICATION.md) — 2026-11-23 manual acceptance evidence and outstanding verification
 
 ## Portfolio summary
 
@@ -75,6 +81,6 @@ Unit tests cover OTP verification, authorization gates for appointments and noti
 
 ## Hebrew / תקציר בעברית
 
-מערכת לניהול תורים למספרה: הזמנת תורים, קוד אימות ללקוח, צפייה וביטול, יומן מנהל, שעות פעילות וחסימות. הפרויקט מיועד להדגמה ולתיק עבודות; שליחת SMS אמיתית ואימות אינטגרציה מלא עדיין אינם כלולים.
+מערכת לניהול תורים למספרה: הזמנת תורים, קוד אימות ללקוח, צפייה וביטול, יומן מנהל, שעות פעילות וחסימות. נבדקו ידנית תהליכי ליבה מול SQL Server מקומי; הפרויקט מיועד להדגמה ולתיק עבודות בלבד. שליחת SMS אמיתית, בדיקות E2E אוטומטיות והקשחת ייצור עדיין אינם כלולים.
 
 **Dependency maintenance:** Spring Boot 3.5.16 is a compatibility-focused upgrade from the uploaded 3.2.5, but the 3.5 community maintenance period has ended; migrate to a current supported 4.x release after verifying compatibility and tests.
